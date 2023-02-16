@@ -27,11 +27,14 @@
                                             <ion-icon name="pencil-outline"></ion-icon>
                                         </a></td>
                                     <td class="p-2">
-                                        <form action="{{ route('todo.destroy', $todo->id) }}" method="POST">
+                                        <form id="myForm{{ $todo->id }}"
+                                            action="{{ route('todo.destroy', $todo->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <input type="Submit" value="">
-                                            <ion-icon name="close-circle-outline"></ion-icon></input>
+                                            <a href="#"
+                                                onclick="document.getElementById('myForm{{ $todo->id }}').submit();">
+                                                <ion-icon name="close-circle-outline" class="text-red-400"></ion-icon>
+                                            </a>
                                         </form>
                                     </td>
                                 </tr>
