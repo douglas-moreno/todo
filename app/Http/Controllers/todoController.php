@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTodoRequest;
 use App\Http\Requests\UpdateTodoRequest;
 use App\Models\Todo;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class todoController extends Controller
@@ -39,7 +37,6 @@ class todoController extends Controller
 
         $data['user_id'] = Auth::id();
 
-        #dd($data);
         Todo::create($data);
 
         return redirect()->route('todo.index');
@@ -58,15 +55,34 @@ class todoController extends Controller
      */
     public function edit(int $todo) #: Response
     {
-        //dd($todo);
+        if (!$todoedit = Todo::find($todo))
+            return redirect()->route('todo.index');
+
+        return view('todo.edit', compact('todoedit'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTodoRequest $request, Todo $todo) #: RedirectResponse
+    public function update(UpdateTodoRequest $request, int $todo): RedirectResponse
     {
-        //
+        $data = $request->all();
+
+        if (!$todoedit = Todo::find($todo)) {
+            return redirect()->route('todo.index');
+        }
+
+
+        if ($data['completed'] == "on") {
+            $data['completed'] = 1;
+        } else {
+            $data['completed'] = 0;
+        }
+
+
+        $todoedit->update($data);
+
+        return redirect()->route('todo.index');
     }
 
     /**
